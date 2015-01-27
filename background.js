@@ -1,6 +1,6 @@
 
 var httpUrl = "http://imgur.com/";
-var httpsUrl + "https://imgur.com/;
+var httpsUrl + "https://imgur.com/";
 
 function isGifGenUrl(url) {
     return url.indexOf(httpUrl) == 0 || url.indexOf(httpsUrl) == 0;
