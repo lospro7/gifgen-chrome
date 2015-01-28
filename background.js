@@ -1,6 +1,8 @@
 
-var httpUrl = "http://imgur.com/";
-var httpsUrl + "https://imgur.com/";
+var lastUrl = "";
+var lastJqxhr;
+var httpUrl = "http://imgur.com/gg/";
+var httpsUrl = "https://imgur.com/gg/";
 
 function isGifGenUrl(url) {
     return url.indexOf(httpUrl) == 0 || url.indexOf(httpsUrl) == 0;
@@ -21,35 +23,42 @@ function getCurrentTabUrl(callback) {
 }
 
 chrome.browserAction.onClicked.addListener(function goToGifGen() {
-    console.log('Going to gifgen...');
-  
-    chrome.tabs.getAllInWindow(undefined, function(tabs) {
-        for (var i = 0, tab; tab = tabs[i]; i++) {
-            if (tab.url && isGifGenUrl(tab.url)) {
-                console.log('Found GifGen tab: ' + tab.url + '. Focusing and refreshing count...');
-                chrome.tabs.update(tab.id, {selected: true});
-                startRequest({scheduleRequest:false, showLoadingAnimation:false});
-                return;
-            }
-        }
-
-        console.log('Could not find GifGen tab. Creating one...');
-        chrome.tabs.create({url: httpsUrl});
-    });
+    getCurrentTabUrl(function(url) {
+		isValid(function() {
+			chrome.tabs.create({url: httpsUrl+"?url="+encodeURIComponent(url)});
+		}, function() {
+			chrome.tabs.create({url: httpsUrl});
+		}, url);
+	});
 });
 
-var lastUrl = "";
+function isValid(cbActive, cbInactive, url) {
+	if(lastJqxhr) {
+		lastJqxhr.abort();
+	}
+
+	lastJqxhr = $.get("http://carlosespinoza.me/gg/url?url="+encodeURIComponent(url), function(data) {
+		console.log(data);
+		if(data.success && data.data.src != null) {
+			cbActive();
+		} else {
+			cbInactive();
+		}
+	});
+
+	lastUrl = url;
+}
 
 setInterval(function(){
     getCurrentTabUrl(function(url) {
-        if(lastUrl != url) {
-            // if url response cached, return that
-            // do an ajax request
-            // if response is good, then change icon color to green
-            // else, change icon color to gray
-            // cache the response
-        }
-
-        lastUrl = url;
+		if(lastUrl != url) {
+			isValid(function() {
+				chrome.browserAction.setIcon({path:"active.png"});
+				chrome.browserAction.setTitle({title: "Convert Video to GIF"});
+			}, function() {
+				chrome.browserAction.setIcon({path:"inactive.png"});
+				chrome.browserAction.setTitle({title: "Open GifGen in new window"});
+			}, url);
+		}
     });
 }, 500);
