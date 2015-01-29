@@ -1,8 +1,8 @@
 
 var lastUrl = "";
 var lastJqxhr;
-var httpUrl = "http://imgur.com/gg/";
-var httpsUrl = "https://imgur.com/gg/";
+var httpUrl = "http://imgur.com/vidgif";
+var httpsUrl = "https://imgur.com/vidgif";
 
 function isGifGenUrl(url) {
     return url.indexOf(httpUrl) == 0 || url.indexOf(httpsUrl) == 0;
@@ -24,11 +24,7 @@ function getCurrentTabUrl(callback) {
 
 chrome.browserAction.onClicked.addListener(function goToGifGen() {
     getCurrentTabUrl(function(url) {
-		isValid(function() {
-			chrome.tabs.create({url: httpsUrl+"?url="+encodeURIComponent(url)});
-		}, function() {
-			chrome.tabs.create({url: httpsUrl});
-		}, url);
+		chrome.tabs.create({url: httpsUrl+"?url="+encodeURIComponent(url)+"&start=0&duration=5"});
 	});
 });
 
@@ -37,8 +33,7 @@ function isValid(cbActive, cbInactive, url) {
 		lastJqxhr.abort();
 	}
 
-	lastJqxhr = $.get("http://carlosespinoza.me/gg/url?url="+encodeURIComponent(url), function(data) {
-		console.log(data);
+	lastJqxhr = $.get(httpUrl+"/url?url="+encodeURIComponent(url), function(data) {
 		if(data.success && data.data.src != null) {
 			cbActive();
 		} else {
@@ -54,11 +49,11 @@ setInterval(function(){
 		if(lastUrl != url) {
 			isValid(function() {
 				chrome.browserAction.setIcon({path:"active.png"});
-				chrome.browserAction.setTitle({title: "Convert Video to GIF"});
+				chrome.browserAction.setTitle({title: "Convert this video into a GIF"});
 			}, function() {
 				chrome.browserAction.setIcon({path:"inactive.png"});
-				chrome.browserAction.setTitle({title: "Open GifGen in new window"});
+				chrome.browserAction.setTitle({title: "Imgur video to GIF"});
 			}, url);
 		}
     });
-}, 500);
+}, 1000);

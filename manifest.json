@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Convert Video to GIF",
+  "short_name": "Chrome vidgif"
   "description": "",
   "version": "1.0",
 
@@ -9,11 +10,12 @@
     "page": "background.html"
   },
   "browser_action": {
-    "default_title": "Go to Gifgen"
+    "default_title": "Imgur video to GIF"
   },
   "permissions": [
     "activeTab",
     "tabs",
-    "https://ajax.googleapis.com/"
+    "http://imgur.com/",
+    "https://imgur.com/"
   ]
 }
