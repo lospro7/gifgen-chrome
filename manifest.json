@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "Convert Video to GIF",
-  "short_name": "Chrome vidgif"
-  "description": "",
-  "version": "1.0",
+  "name": "Imgur Video to GIF",
+  "short_name": "Imgur Vidgif",
+  "description": "The quickest way to launch Imgur's video to GIF creation tool",
+  "version": "1.2",
 
   "background": {
     "persistent": false,

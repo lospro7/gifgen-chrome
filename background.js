@@ -44,7 +44,10 @@ function isValid(cbActive, cbInactive, url) {
 	lastUrl = url;
 }
 
-setInterval(function(){
+chrome.browserAction.setIcon({path: "active.png"});
+chrome.browserAction.setTitle({title: "Imgur Video to GIF"});
+
+/*setInterval(function(){
     getCurrentTabUrl(function(url) {
 		if(lastUrl != url) {
 			isValid(function() {
@@ -56,4 +59,4 @@ setInterval(function(){
 			}, url);
 		}
     });
-}, 1000);
+}, 1000);*/
